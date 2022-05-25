@@ -1,9 +1,14 @@
 package com.jakubveverka.spacedata.di
 
 import androidx.room.Room
+import com.jakubveverka.spacedata.api.SpaceApi
 import com.jakubveverka.spacedata.db.SpaceDatabase
+import com.jakubveverka.spacedata.repository.SpaceRepository
+import com.squareup.moshi.Moshi
 import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.module
+import retrofit2.Retrofit
+import retrofit2.converter.moshi.MoshiConverterFactory
 
 val dataModule = module {
     single {
@@ -13,4 +18,17 @@ val dataModule = module {
         ).build()
     }
     single { get<SpaceDatabase>().launchDao() }
+
+    single { Moshi.Builder().build() }
+    single {
+        Retrofit.Builder()
+            .baseUrl(SPACE_X_DATA_URL)
+            .addConverterFactory(MoshiConverterFactory.create(get()))
+            .build()
+            .create(SpaceApi::class.java)
+    }
+
+    factory { SpaceRepository(get(), get()) }
 }
+
+private const val SPACE_X_DATA_URL = "https://api.spacexdata.com/"

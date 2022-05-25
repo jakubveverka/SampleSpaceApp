@@ -3,6 +3,7 @@ package com.jakubveverka.samplespaceapp
 import android.app.Application
 import com.jakubveverka.samplespaceapp.di.appModule
 import com.jakubveverka.spacedata.di.dataModule
+import com.jakubveverka.spacelist.di.listModule
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.startKoin
@@ -14,7 +15,7 @@ class MyApplication : Application() {
         startKoin {
             androidLogger()
             androidContext(this@MyApplication)
-            modules(appModule, dataModule)
+            modules(appModule, dataModule, listModule)
         }
     }
 }

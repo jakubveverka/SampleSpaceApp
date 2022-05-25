@@ -19,3 +19,4 @@ dependencyResolutionManagement {
 rootProject.name = "SampleSpaceApp"
 include ':app'
 include ':spaceData'
+include ':spaceList'
