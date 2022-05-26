@@ -2,14 +2,14 @@ package com.jakubveverka.spacedata.model
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.squareup.moshi.Json
+import com.google.gson.annotations.SerializedName
 
 @Entity
 data class Launch(
-    @Json(name = "id") @PrimaryKey val id: String,
-    @Json(name = "name") val name: String,
-    @Json(name = "date_unix") val date: Long, //date_unix
-    @Json(name = "success") val success: Boolean,
-    @Json(name = "flight_number") val flightNumber: Int,
-    @Json(name = "details") val details: String?
+    @SerializedName("id") @PrimaryKey val id: String,
+    @SerializedName("name") val name: String,
+    @SerializedName("date_unix") val date: Long?,
+    @SerializedName("success") val success: Boolean,
+    @SerializedName("flight_number") val flightNumber: Int,
+    @SerializedName("details") val details: String?
 )

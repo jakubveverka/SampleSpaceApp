@@ -57,7 +57,8 @@ dependencies {
     implementation "io.insert-koin:koin-android:$koin_version"
 
     implementation(project(":spaceData"))
-    implementation(project(":spaceList"))
+    implementation(project(':spaceLaunch'))
+    implementation(project(':spaceNavigation'))
 
     testImplementation 'junit:junit:4.13.2'
 

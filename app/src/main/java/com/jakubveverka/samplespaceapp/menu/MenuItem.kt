@@ -1,9 +1,9 @@
 package com.jakubveverka.samplespaceapp.menu
 
-import com.jakubveverka.samplespaceapp.navigation.Screen
+import com.jakubveverka.spacenavigation.Screen
 
 enum class MenuItem(val title: String, val screen: Screen) {
-    MENU_ITEM_1("Menu item 1", Screen.Screen1),
+    LAUNCH_LIST("Launch List", Screen.LaunchList),
     MENU_ITEM_2("Menu item 2", Screen.Screen2),
     MENU_ITEM_3("Menu item 3", Screen.Screen3)
 }

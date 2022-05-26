@@ -11,7 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.jakubveverka.samplespaceapp.menu.MenuItem
-import com.jakubveverka.samplespaceapp.navigation.NavigationManager
+import com.jakubveverka.spacenavigation.NavigationManager
 
 @Composable
 fun Drawer(menuItems: List<MenuItem>, navigationManager: NavigationManager) {

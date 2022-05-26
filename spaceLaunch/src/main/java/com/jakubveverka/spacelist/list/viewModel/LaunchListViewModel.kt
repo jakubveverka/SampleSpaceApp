@@ -1,4 +1,4 @@
-package com.jakubveverka.spacelist.viewModel
+package com.jakubveverka.spacelist.list.viewModel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
