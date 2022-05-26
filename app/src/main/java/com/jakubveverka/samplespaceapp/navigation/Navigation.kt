@@ -9,14 +9,17 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.jakubveverka.spacelist.LaunchList
 import com.jakubveverka.spacelist.detail.LaunchDetail
+import com.jakubveverka.spacelist.detail.viewModel.LaunchDetailViewModel
 import com.jakubveverka.spacelist.list.viewModel.LaunchListViewModel
 import com.jakubveverka.spacenavigation.Screen
+import kotlinx.coroutines.CoroutineScope
 
 @Composable
 fun Navigation(
     navController: NavHostController,
     navigationManager: com.jakubveverka.spacenavigation.NavigationManager,
     launchListViewModel: LaunchListViewModel,
+    launchDetailViewModel: LaunchDetailViewModel
 ) {
     NavHost(
         navController = navController,
@@ -26,16 +29,17 @@ fun Navigation(
             LaunchList(launchListViewModel, navigationManager)
         }
         composable(route = Screen.Screen2.route) {
-            Text(text = "Hello how are you?")
+            Text(text = "Screen 2")
         }
         composable(route = Screen.Screen3.route) {
-            Text(text = "Hello Im good")
+            Text(text = "Screen 3")
         }
         composable(
             route = Screen.LaunchDetail.route,
             arguments = getNavArgumentsForScreen(Screen.LaunchDetail)
         ) { backStackEntry ->
             LaunchDetail(
+                launchDetailViewModel,
                 backStackEntry.arguments?.getString(Screen.Parameter.LAUNCH_ID.paramName)
                     ?: throw java.lang.IllegalStateException("No 'launchId' parameter passed to LaunchDetail route")
             )

@@ -4,6 +4,7 @@ import androidx.room.Room
 import com.jakubveverka.spacedata.api.SpaceApi
 import com.jakubveverka.spacedata.db.SpaceDatabase
 import com.jakubveverka.spacedata.repository.SpaceRepository
+import com.jakubveverka.spacedata.repository.SpaceRepositoryImpl
 import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.module
 import retrofit2.Retrofit
@@ -26,7 +27,7 @@ val dataModule = module {
             .create(SpaceApi::class.java)
     }
 
-    factory { SpaceRepository(get(), get()) }
+    factory<SpaceRepository> { SpaceRepositoryImpl(get(), get()) }
 }
 
 private const val SPACE_X_DATA_URL = "https://api.spacexdata.com/"

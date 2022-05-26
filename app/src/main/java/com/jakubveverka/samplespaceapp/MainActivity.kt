@@ -13,6 +13,7 @@ import com.jakubveverka.spacenavigation.NavigationManager
 import com.jakubveverka.samplespaceapp.ui.composable.Drawer
 import com.jakubveverka.samplespaceapp.ui.composable.MyTopBar
 import com.jakubveverka.samplespaceapp.ui.theme.SampleSpaceAppTheme
+import com.jakubveverka.spacelist.detail.viewModel.LaunchDetailViewModel
 import com.jakubveverka.spacelist.list.viewModel.LaunchListViewModel
 import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
@@ -23,6 +24,7 @@ class MainActivity : ComponentActivity() {
     private val navigationManager: NavigationManager by inject()
 
     private val launchListViewModel by viewModel<LaunchListViewModel>()
+    private val launchDetailViewModel by viewModel<LaunchDetailViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,9 +38,18 @@ class MainActivity : ComponentActivity() {
                     if (navDestination != null) {
                         scope.launch {
                             scaffoldState.drawerState.close()
-                            val paramsToReplace = navDestination.params.map { Pair("{${it.first.paramName}}", it.second) }
+                            val paramsToReplace = navDestination.params.map {
+                                Pair(
+                                    "{${it.first.paramName}}",
+                                    it.second
+                                )
+                            }
 
-                            navController.navigate(navDestination.screen.route.replace(paramsToReplace))
+                            navController.navigate(
+                                navDestination.screen.route.replace(
+                                    paramsToReplace
+                                )
+                            )
                         }
                     }
                 }
@@ -49,7 +60,12 @@ class MainActivity : ComponentActivity() {
                     drawerBackgroundColor = MaterialTheme.colors.background,
                     drawerContent = { Drawer(MenuItem.values().toList(), navigationManager) }
                 ) {
-                    Navigation(navController, navigationManager, launchListViewModel)
+                    Navigation(
+                        navController,
+                        navigationManager,
+                        launchListViewModel,
+                        launchDetailViewModel
+                    )
                 }
             }
         }
@@ -57,7 +73,9 @@ class MainActivity : ComponentActivity() {
 
     private fun String.replace(replacements: List<Pair<String, String>>): String {
         var result = this
-        replacements.forEach { (toReplace, newValue) -> result = result.replace(toReplace, newValue) }
+        replacements.forEach { (toReplace, newValue) ->
+            result = result.replace(toReplace, newValue)
+        }
         return result
     }
 

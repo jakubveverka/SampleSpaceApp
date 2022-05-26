@@ -5,6 +5,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy.REPLACE
 import androidx.room.Query
 import com.jakubveverka.spacedata.model.Launch
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface LaunchDao {
@@ -17,4 +18,7 @@ interface LaunchDao {
 
     @Insert(onConflict = REPLACE)
     suspend fun insert(vararg entity: Launch)
+
+    @Query("SELECT * FROM LAUNCH WHERE id = :id")
+    fun getLaunchById(id: String): Flow<Launch>
 }

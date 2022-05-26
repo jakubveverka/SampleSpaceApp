@@ -67,7 +67,7 @@ private fun LaunchListColumn(data: List<Launch>, navigationManager: NavigationMa
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .background(Color.Red)
+                        .background(if (launch.success) Color.Magenta else Color.Red)
                         .padding(5.dp)
                 ) {
                     Column(modifier = Modifier.weight(.3f)) {
