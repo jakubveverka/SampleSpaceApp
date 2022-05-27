@@ -4,6 +4,7 @@ import kotlinx.coroutines.flow.StateFlow
 
 interface NavigationManager {
 
+    var currentRoute: String?
     val destinationState: StateFlow<NavDestination?>
     fun navigate(screen: Screen, params: List<Pair<Screen.Parameter, String>> = listOf())
 

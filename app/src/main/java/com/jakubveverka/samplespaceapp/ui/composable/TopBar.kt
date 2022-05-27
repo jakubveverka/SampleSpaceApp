@@ -10,7 +10,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun MyTopBar(scaffoldState: ScaffoldState, scope: CoroutineScope) {
     TopAppBar(
-        title = { Text(text = "Sample Space App") },
+        title = { Text(text = "Space App") },
         navigationIcon = {
             IconButton(onClick = { scope.launch { scaffoldState.drawerState.open() } }) {
                 Icon(Icons.Rounded.Menu, contentDescription = "Menu")

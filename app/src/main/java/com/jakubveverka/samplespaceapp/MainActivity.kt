@@ -4,8 +4,8 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.material.*
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.*
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.jakubveverka.samplespaceapp.menu.MenuItem
 import com.jakubveverka.samplespaceapp.navigation.Navigation
@@ -15,6 +15,7 @@ import com.jakubveverka.samplespaceapp.ui.composable.MyTopBar
 import com.jakubveverka.samplespaceapp.ui.theme.SampleSpaceAppTheme
 import com.jakubveverka.spacelist.detail.viewModel.LaunchDetailViewModel
 import com.jakubveverka.spacelist.list.viewModel.LaunchListViewModel
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -34,40 +35,65 @@ class MainActivity : ComponentActivity() {
                 val scaffoldState = rememberScaffoldState(rememberDrawerState(DrawerValue.Closed))
                 val scope = rememberCoroutineScope()
 
-                navigationManager.destinationState.collectAsState().value.also { navDestination ->
-                    if (navDestination != null) {
-                        scope.launch {
-                            scaffoldState.drawerState.close()
-                            val paramsToReplace = navDestination.params.map {
-                                Pair(
-                                    "{${it.first.paramName}}",
-                                    it.second
-                                )
-                            }
+                HandleNavigation(navController, scope, scaffoldState)
 
-                            navController.navigate(
-                                navDestination.screen.route.replace(
-                                    paramsToReplace
-                                )
+                Content(navController, scaffoldState, scope)
+            }
+        }
+    }
+
+    @Composable
+    private fun HandleNavigation(
+        navController: NavHostController,
+        scope: CoroutineScope,
+        scaffoldState: ScaffoldState
+    ) {
+        navigationManager.destinationState.collectAsState().value.also { navDestination ->
+            if (navDestination != null) {
+                scope.launch {
+                    val paramsToReplace = navDestination.params.map {
+                        Pair(
+                            "{${it.first.paramName}}",
+                            it.second
+                        )
+                    }
+
+                    val finalRoute = navDestination.screen.route.replace(
+                        paramsToReplace
+                    )
+
+                    if (finalRoute != navigationManager.currentRoute) {
+                        scaffoldState.drawerState.close()
+                        navigationManager.currentRoute = finalRoute
+                        navController.navigate(
+                            navDestination.screen.route.replace(
+                                paramsToReplace
                             )
-                        }
+                        )
                     }
                 }
-
-                Scaffold(
-                    scaffoldState = scaffoldState,
-                    topBar = { MyTopBar(scaffoldState, scope) },
-                    drawerBackgroundColor = MaterialTheme.colors.background,
-                    drawerContent = { Drawer(MenuItem.values().toList(), navigationManager) }
-                ) {
-                    Navigation(
-                        navController,
-                        navigationManager,
-                        launchListViewModel,
-                        launchDetailViewModel
-                    )
-                }
             }
+        }
+    }
+
+    @Composable
+    private fun Content(
+        navController: NavHostController,
+        scaffoldState: ScaffoldState,
+        scope: CoroutineScope
+    ) {
+        Scaffold(
+            scaffoldState = scaffoldState,
+            topBar = { MyTopBar(scaffoldState, scope) },
+            drawerBackgroundColor = MaterialTheme.colors.background,
+            drawerContent = { Drawer(MenuItem.values().toList(), navigationManager) }
+        ) {
+            Navigation(
+                navController,
+                navigationManager,
+                launchListViewModel,
+                launchDetailViewModel
+            )
         }
     }
 
