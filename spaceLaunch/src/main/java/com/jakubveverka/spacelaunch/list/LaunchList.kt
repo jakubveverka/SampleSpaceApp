@@ -112,16 +112,16 @@ private fun LaunchListColumn(data: List<Launch>, navigationManager: NavigationMa
                         .padding(5.dp)
                 ) {
                     Column(modifier = Modifier.weight(.3f)) {
-                        Text(text = launch.name)
+                        Text(text = launch.name, color = Color.White)
                     }
                     Column(modifier = Modifier.weight(.3f)) {
                         val dateText = launch.date?.let {
                             SimpleDateFormat.getDateTimeInstance().format(it * 1000)
                         } ?: "No date available"
-                        Text(text = "Date $dateText")
+                        Text(text = "Date $dateText", color = Color.White)
                     }
                     Column(modifier = Modifier.weight(.3f)) {
-                        Text(text = "Flight number ${launch.flightNumber}")
+                        Text(text = "Flight number ${launch.flightNumber}", color = Color.White)
                     }
                 }
                 Spacer(
@@ -138,6 +138,7 @@ private fun LaunchListColumn(data: List<Launch>, navigationManager: NavigationMa
                     Text(
                         text = launch.details?.take(100)
                             ?.run { if (length == 100) "$this..." else this } ?: "No details",
+                        color = Color.White
                     )
                 }
             }
