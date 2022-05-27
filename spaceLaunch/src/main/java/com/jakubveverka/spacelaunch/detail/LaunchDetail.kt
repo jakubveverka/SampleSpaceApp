@@ -8,9 +8,10 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.jakubveverka.spacelaunch.detail.viewModel.LaunchDetailViewModel
+import com.jakubveverka.spacelaunch.ui.LaunchFail
+import com.jakubveverka.spacelaunch.ui.LaunchSuccess
 import java.text.SimpleDateFormat
 
 @Composable
@@ -27,7 +28,7 @@ fun LaunchDetail(
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .background(if (launch.success) Color.Magenta else Color.Red)
+                .background(if (launch.success) LaunchSuccess else LaunchFail)
                 .padding(10.dp)
         ) {
             Text(text = "Name: ${launch.name}")

@@ -5,6 +5,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.AlertDialog
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.OutlinedTextField
@@ -16,11 +17,15 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.jakubveverka.spacedata.api.ApiResult
 import com.jakubveverka.spacedata.model.Launch
 import com.jakubveverka.spacelaunch.list.viewModel.LaunchListViewModel
+import com.jakubveverka.spacelaunch.ui.LaunchDetails
+import com.jakubveverka.spacelaunch.ui.LaunchFail
+import com.jakubveverka.spacelaunch.ui.LaunchSuccess
 import com.jakubveverka.spacenavigation.NavigationManager
 import com.jakubveverka.spacenavigation.Screen
 import java.text.SimpleDateFormat
@@ -98,11 +103,12 @@ private fun LaunchListColumn(data: List<Launch>, navigationManager: NavigationMa
                             listOf(Pair(Screen.Parameter.LAUNCH_ID, launch.id))
                         )
                     }
+                    .clip(RoundedCornerShape(5.dp))
             ) {
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .background(if (launch.success) Color.Magenta else Color.Red)
+                        .background(if (launch.success) LaunchSuccess else LaunchFail)
                         .padding(5.dp)
                 ) {
                     Column(modifier = Modifier.weight(.3f)) {
@@ -126,12 +132,13 @@ private fun LaunchListColumn(data: List<Launch>, navigationManager: NavigationMa
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .background(Color.Blue)
+                        .background(LaunchDetails)
                         .padding(5.dp)
                 ) {
                     Text(
                         text = launch.details?.take(100)
-                            ?.run { if (length == 100) "$this..." else this } ?: "No details")
+                            ?.run { if (length == 100) "$this..." else this } ?: "No details",
+                    )
                 }
             }
         }
