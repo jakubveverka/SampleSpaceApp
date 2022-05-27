@@ -3,7 +3,7 @@ package com.jakubveverka.samplespaceapp
 import android.app.Application
 import com.jakubveverka.samplespaceapp.di.appModule
 import com.jakubveverka.spacedata.di.dataModule
-import com.jakubveverka.spacelist.di.listModule
+import com.jakubveverka.spacelaunch.di.listModule
 import com.jakubveverka.spacenavigation.di.navigationModule
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger

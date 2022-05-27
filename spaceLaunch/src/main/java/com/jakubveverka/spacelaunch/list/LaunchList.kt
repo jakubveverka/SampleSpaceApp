@@ -1,4 +1,4 @@
-package com.jakubveverka.spacelist
+package com.jakubveverka.spacelaunch.list
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -7,8 +7,10 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.AlertDialog
 import androidx.compose.material.CircularProgressIndicator
+import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -18,7 +20,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.jakubveverka.spacedata.api.ApiResult
 import com.jakubveverka.spacedata.model.Launch
-import com.jakubveverka.spacelist.list.viewModel.LaunchListViewModel
+import com.jakubveverka.spacelaunch.list.viewModel.LaunchListViewModel
 import com.jakubveverka.spacenavigation.NavigationManager
 import com.jakubveverka.spacenavigation.Screen
 import java.text.SimpleDateFormat
@@ -26,30 +28,58 @@ import java.text.SimpleDateFormat
 @Composable
 fun LaunchList(launchListViewModel: LaunchListViewModel, navigationManager: NavigationManager) {
     val shouldOpenDialog = rememberSaveable { mutableStateOf(true) }
-    launchListViewModel.launches.collectAsState().also {
-        when (val result = it.value) {
-            is ApiResult.Error -> {
-                LaunchListColumn(result.data, navigationManager)
-                if (shouldOpenDialog.value) {
-                    AlertDialog(
-                        onDismissRequest = { shouldOpenDialog.value = false },
-                        title = { Text(text = "Error = ${result.message}") },
-                        buttons = { }
-                    )
+    val filterName = rememberSaveable { mutableStateOf("") }
+    Column(modifier = Modifier.fillMaxSize()) {
+        FilterTextField(filterName)
+        launchListViewModel.launches.collectAsState().also {
+            val filteredData = it.value.data.filterByName(filterName.value)
+            when (it.value) {
+                is ApiResult.Error -> {
+                    LaunchListColumn(filteredData, navigationManager)
+                    HandleDialog(shouldOpenDialog, it.value.message)
                 }
-            }
-            is ApiResult.Loading -> {
-                Box(
-                    modifier = Modifier.fillMaxSize(),
-                ) {
-                    LaunchListColumn(result.data, navigationManager)
-                    CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
+                is ApiResult.Loading -> {
+                    Box(
+                        modifier = Modifier.fillMaxSize(),
+                    ) {
+                        LaunchListColumn(filteredData, navigationManager)
+                        CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
+                    }
                 }
-            }
-            is ApiResult.Success -> {
-                LaunchListColumn(result.data, navigationManager)
+                is ApiResult.Success -> {
+                    LaunchListColumn(filteredData, navigationManager)
+                }
             }
         }
+    }
+}
+
+private fun List<Launch>.filterByName(filterName: String): List<Launch> {
+    return filter { launch ->
+        launch.name.contains(filterName, ignoreCase = true)
+    }
+}
+
+@Composable
+private fun FilterTextField(filterName: MutableState<String>) {
+    OutlinedTextField(
+        value = filterName.value,
+        onValueChange = { filterName.value = it },
+        placeholder = { Text(text = "Filter launches by name...") },
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(10.dp)
+    )
+}
+
+@Composable
+private fun HandleDialog(shouldOpenDialog: MutableState<Boolean>, dialogTitle: String?) {
+    if (shouldOpenDialog.value) {
+        AlertDialog(
+            onDismissRequest = { shouldOpenDialog.value = false },
+            title = { Text(text = "Error = $dialogTitle") },
+            buttons = { }
+        )
     }
 }
 
@@ -62,7 +92,12 @@ private fun LaunchListColumn(data: List<Launch>, navigationManager: NavigationMa
                     .fillMaxWidth()
                     .background(Color.White)
                     .padding(5.dp)
-                    .clickable { navigationManager.navigate(Screen.LaunchDetail, listOf(Pair(Screen.Parameter.LAUNCH_ID, launch.id))) }
+                    .clickable {
+                        navigationManager.navigate(
+                            Screen.LaunchDetail,
+                            listOf(Pair(Screen.Parameter.LAUNCH_ID, launch.id))
+                        )
+                    }
             ) {
                 Row(
                     modifier = Modifier

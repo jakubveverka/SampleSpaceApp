@@ -1,4 +1,4 @@
-package com.jakubveverka.spacelist
+package com.jakubveverka.spacelaunch
 
 import org.junit.Test
 

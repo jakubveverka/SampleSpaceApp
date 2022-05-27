@@ -1,4 +1,4 @@
-package com.jakubveverka.spacelist.detail.viewModel
+package com.jakubveverka.spacelaunch.detail.viewModel
 
 import androidx.lifecycle.ViewModel
 import com.jakubveverka.spacedata.model.Launch

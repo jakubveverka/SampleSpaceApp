@@ -7,12 +7,11 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
-import com.jakubveverka.spacelist.LaunchList
-import com.jakubveverka.spacelist.detail.LaunchDetail
-import com.jakubveverka.spacelist.detail.viewModel.LaunchDetailViewModel
-import com.jakubveverka.spacelist.list.viewModel.LaunchListViewModel
+import com.jakubveverka.spacelaunch.detail.LaunchDetail
+import com.jakubveverka.spacelaunch.detail.viewModel.LaunchDetailViewModel
+import com.jakubveverka.spacelaunch.list.LaunchList
+import com.jakubveverka.spacelaunch.list.viewModel.LaunchListViewModel
 import com.jakubveverka.spacenavigation.Screen
-import kotlinx.coroutines.CoroutineScope
 
 @Composable
 fun Navigation(

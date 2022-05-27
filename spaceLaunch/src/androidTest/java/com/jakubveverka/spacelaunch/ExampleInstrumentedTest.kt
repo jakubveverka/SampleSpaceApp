@@ -1,4 +1,4 @@
-package com.jakubveverka.spacelist
+package com.jakubveverka.spacelaunch
 
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.ext.junit.runners.AndroidJUnit4

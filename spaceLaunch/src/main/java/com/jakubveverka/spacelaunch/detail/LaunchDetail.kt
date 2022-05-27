@@ -1,4 +1,4 @@
-package com.jakubveverka.spacelist.detail
+package com.jakubveverka.spacelaunch.detail
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
@@ -10,7 +10,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.jakubveverka.spacelist.detail.viewModel.LaunchDetailViewModel
+import com.jakubveverka.spacelaunch.detail.viewModel.LaunchDetailViewModel
 import java.text.SimpleDateFormat
 
 @Composable

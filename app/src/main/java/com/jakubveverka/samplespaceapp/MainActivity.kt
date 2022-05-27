@@ -13,8 +13,8 @@ import com.jakubveverka.spacenavigation.NavigationManager
 import com.jakubveverka.samplespaceapp.ui.composable.Drawer
 import com.jakubveverka.samplespaceapp.ui.composable.MyTopBar
 import com.jakubveverka.samplespaceapp.ui.theme.SampleSpaceAppTheme
-import com.jakubveverka.spacelist.detail.viewModel.LaunchDetailViewModel
-import com.jakubveverka.spacelist.list.viewModel.LaunchListViewModel
+import com.jakubveverka.spacelaunch.detail.viewModel.LaunchDetailViewModel
+import com.jakubveverka.spacelaunch.list.viewModel.LaunchListViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
