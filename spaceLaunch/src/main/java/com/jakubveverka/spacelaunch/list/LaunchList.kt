@@ -26,6 +26,7 @@ import com.jakubveverka.spacelaunch.list.viewModel.LaunchListViewModel
 import com.jakubveverka.spacelaunch.ui.LaunchDetails
 import com.jakubveverka.spacelaunch.ui.LaunchFail
 import com.jakubveverka.spacelaunch.ui.LaunchSuccess
+import com.jakubveverka.spacelaunch.ui.WhiteText
 import com.jakubveverka.spacenavigation.NavigationManager
 import com.jakubveverka.spacenavigation.Screen
 import java.text.SimpleDateFormat
@@ -46,9 +47,10 @@ fun LaunchList(launchListViewModel: LaunchListViewModel, navigationManager: Navi
                 is ApiResult.Loading -> {
                     Box(
                         modifier = Modifier.fillMaxSize(),
+                        contentAlignment = Alignment.Center
                     ) {
                         LaunchListColumn(filteredData, navigationManager)
-                        CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
+                        Loading()
                     }
                 }
                 is ApiResult.Success -> {
@@ -62,6 +64,16 @@ fun LaunchList(launchListViewModel: LaunchListViewModel, navigationManager: Navi
 private fun List<Launch>.filterByName(filterName: String): List<Launch> {
     return filter { launch ->
         launch.name.contains(filterName, ignoreCase = true)
+    }
+}
+
+@Composable
+private fun Loading() {
+    Box(
+        contentAlignment = Alignment.Center,
+        modifier = Modifier.size(100.dp).background(Color.White, shape = RoundedCornerShape(8.dp))
+    ) {
+        CircularProgressIndicator()
     }
 }
 
@@ -111,17 +123,20 @@ private fun LaunchListColumn(data: List<Launch>, navigationManager: NavigationMa
                         .background(if (launch.success) LaunchSuccess else LaunchFail)
                         .padding(5.dp)
                 ) {
-                    Column(modifier = Modifier.weight(.3f)) {
-                        Text(text = launch.name, color = Color.White)
+                    val columnModifier = Modifier
+                        .weight(.3f)
+                        .padding(3.dp)
+                    Column(modifier = columnModifier) {
+                        WhiteText(text = launch.name)
                     }
-                    Column(modifier = Modifier.weight(.3f)) {
+                    Column(modifier = columnModifier) {
                         val dateText = launch.date?.let {
                             SimpleDateFormat.getDateTimeInstance().format(it * 1000)
                         } ?: "No date available"
-                        Text(text = "Date $dateText", color = Color.White)
+                        WhiteText(text = "Date $dateText")
                     }
-                    Column(modifier = Modifier.weight(.3f)) {
-                        Text(text = "Flight number ${launch.flightNumber}", color = Color.White)
+                    Column(modifier = columnModifier) {
+                        WhiteText(text = "Flight number ${launch.flightNumber}")
                     }
                 }
                 Spacer(
@@ -135,10 +150,9 @@ private fun LaunchListColumn(data: List<Launch>, navigationManager: NavigationMa
                         .background(LaunchDetails)
                         .padding(5.dp)
                 ) {
-                    Text(
+                    WhiteText(
                         text = launch.details?.take(100)
-                            ?.run { if (length == 100) "$this..." else this } ?: "No details",
-                        color = Color.White
+                            ?.run { if (length == 100) "$this..." else this } ?: "No details"
                     )
                 }
             }
