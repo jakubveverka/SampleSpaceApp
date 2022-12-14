@@ -13,5 +13,9 @@ App is divided to several modules.
 * spaceNavigation - Plain Kotlin module that contains components used for navigation in the app. NavigationManager is used throughout the app for handling navigation event, so the NavigationController does not have to passed all around the app.
 
 ##TODO
-Separate logic to UseCases, not have just one model classes (separate DTO and domain)
-Another screens, writing data over the network, unit and integration tests, image loading and processing
+* separate logic to UseCases
+* not have just one model classes (separate DTO and domain)
+* Another screens
+* writing data over the network
+* unit and integration tests
+* image loading and processing
