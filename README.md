@@ -15,6 +15,7 @@ App is divided to several modules.
 ##TODO
 * build.gradle files to kts
 * dependencies and versions refactoring
+* handle back navigation
 * Another screens
 * writing data over the network
 * unit and integration tests

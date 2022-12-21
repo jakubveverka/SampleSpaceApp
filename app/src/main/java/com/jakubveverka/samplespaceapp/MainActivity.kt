@@ -84,7 +84,7 @@ class MainActivity : ComponentActivity() {
     ) {
         Scaffold(
             scaffoldState = scaffoldState,
-            topBar = { MyTopBar { scope.launch { scaffoldState.drawerState.open() } } },
+            topBar = { MyTopBar(navigationManager) { scope.launch { scaffoldState.drawerState.open() } } },
             drawerBackgroundColor = MaterialTheme.colors.background,
             drawerContent = { Drawer(MenuItem.values().toList(), navigationManager) }
         ) {
