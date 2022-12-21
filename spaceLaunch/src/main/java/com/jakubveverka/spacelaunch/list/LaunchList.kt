@@ -21,7 +21,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.jakubveverka.spacedata.api.ApiResult
-import com.jakubveverka.spacedata.model.Launch
+import com.jakubveverka.spacedata.domain.model.Launch
 import com.jakubveverka.spacelaunch.list.viewModel.LaunchListViewModel
 import com.jakubveverka.spacelaunch.ui.LaunchDetails
 import com.jakubveverka.spacelaunch.ui.LaunchFail
@@ -68,41 +68,52 @@ private fun List<Launch>.filterByName(filterName: String): List<Launch> {
 }
 
 @Composable
-private fun Loading() {
+private fun Loading(modifier: Modifier = Modifier) {
     Box(
         contentAlignment = Alignment.Center,
-        modifier = Modifier.size(100.dp).background(Color.White, shape = RoundedCornerShape(8.dp))
+        modifier = modifier
+            .size(100.dp)
+            .background(Color.White, shape = RoundedCornerShape(8.dp))
     ) {
         CircularProgressIndicator()
     }
 }
 
 @Composable
-private fun FilterTextField(filterName: MutableState<String>) {
+private fun FilterTextField(filterName: MutableState<String>, modifier: Modifier = Modifier) {
     OutlinedTextField(
         value = filterName.value,
         onValueChange = { filterName.value = it },
         placeholder = { Text(text = "Filter launches by name...") },
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .padding(10.dp)
     )
 }
 
 @Composable
-private fun HandleDialog(shouldOpenDialog: MutableState<Boolean>, dialogTitle: String?) {
+private fun HandleDialog(
+    shouldOpenDialog: MutableState<Boolean>,
+    dialogTitle: String?,
+    modifier: Modifier = Modifier
+) {
     if (shouldOpenDialog.value) {
         AlertDialog(
             onDismissRequest = { shouldOpenDialog.value = false },
             title = { Text(text = "Error = $dialogTitle") },
-            buttons = { }
+            buttons = { },
+            modifier = modifier
         )
     }
 }
 
 @Composable
-private fun LaunchListColumn(data: List<Launch>, navigationManager: NavigationManager) {
-    LazyColumn(modifier = Modifier.fillMaxSize()) {
+private fun LaunchListColumn(
+    data: List<Launch>,
+    navigationManager: NavigationManager,
+    modifier: Modifier = Modifier
+) {
+    LazyColumn(modifier = modifier.fillMaxSize()) {
         itemsIndexed(data) { _, launch ->
             Column(
                 modifier = Modifier

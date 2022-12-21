@@ -1,13 +1,10 @@
-package com.jakubveverka.spacedata.repository
+package com.jakubveverka.spacelaunch.list.usecase
 
 import com.jakubveverka.spacedata.api.ApiResult
-import com.jakubveverka.spacedata.api.model.LaunchDto
 import com.jakubveverka.spacedata.domain.model.Launch
 import kotlinx.coroutines.flow.Flow
 
-interface SpaceRepository {
+interface LaunchListUseCase {
 
     fun getLaunches(): Flow<ApiResult<List<Launch>>>
-
-    fun getLaunch(id: String): Flow<Launch>
 }

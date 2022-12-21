@@ -4,15 +4,15 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Menu
 import androidx.compose.runtime.Composable
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.launch
+import androidx.compose.ui.Modifier
 
 @Composable
-fun MyTopBar(scaffoldState: ScaffoldState, scope: CoroutineScope) {
+fun MyTopBar(modifier: Modifier = Modifier, iconClick: () -> Unit) {
     TopAppBar(
+        modifier = modifier,
         title = { Text(text = "Space App") },
         navigationIcon = {
-            IconButton(onClick = { scope.launch { scaffoldState.drawerState.open() } }) {
+            IconButton(onClick = iconClick) {
                 Icon(Icons.Rounded.Menu, contentDescription = "Menu")
             }
         }

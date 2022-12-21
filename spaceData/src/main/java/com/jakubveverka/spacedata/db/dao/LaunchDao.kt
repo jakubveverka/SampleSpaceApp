@@ -4,21 +4,21 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy.REPLACE
 import androidx.room.Query
-import com.jakubveverka.spacedata.model.Launch
+import com.jakubveverka.spacedata.db.model.LaunchEntity
 import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface LaunchDao {
 
-    @Query("SELECT * FROM Launch")
-    suspend fun getAll(): List<Launch>
+    @Query("SELECT * FROM LaunchEntity")
+    suspend fun getAll(): List<LaunchEntity>
 
-    @Query("DELETE FROM Launch")
+    @Query("DELETE FROM LaunchEntity")
     suspend fun removeAll()
 
     @Insert(onConflict = REPLACE)
-    suspend fun insert(vararg entity: Launch)
+    suspend fun insert(vararg entity: LaunchEntity)
 
-    @Query("SELECT * FROM LAUNCH WHERE id = :id")
-    fun getLaunchById(id: String): Flow<Launch>
+    @Query("SELECT * FROM LaunchEntity WHERE id = :id")
+    fun getLaunchById(id: String): Flow<LaunchEntity>
 }

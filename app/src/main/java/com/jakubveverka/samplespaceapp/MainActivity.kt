@@ -35,7 +35,7 @@ class MainActivity : ComponentActivity() {
                 val scaffoldState = rememberScaffoldState(rememberDrawerState(DrawerValue.Closed))
                 val scope = rememberCoroutineScope()
 
-                HandleNavigation(navController, scope, scaffoldState)
+                HandleNavigation(navController, scope) { scaffoldState.drawerState.close() }
 
                 Content(navController, scaffoldState, scope)
             }
@@ -46,7 +46,7 @@ class MainActivity : ComponentActivity() {
     private fun HandleNavigation(
         navController: NavHostController,
         scope: CoroutineScope,
-        scaffoldState: ScaffoldState
+        closeDrawer: suspend () -> Unit
     ) {
         navigationManager.destinationState.collectAsState().value.also { navDestination ->
             if (navDestination != null) {
@@ -63,7 +63,7 @@ class MainActivity : ComponentActivity() {
                     )
 
                     if (finalRoute != navigationManager.currentRoute) {
-                        scaffoldState.drawerState.close()
+                        closeDrawer()
                         navigationManager.currentRoute = finalRoute
                         navController.navigate(
                             navDestination.screen.route.replace(
@@ -84,7 +84,7 @@ class MainActivity : ComponentActivity() {
     ) {
         Scaffold(
             scaffoldState = scaffoldState,
-            topBar = { MyTopBar(scaffoldState, scope) },
+            topBar = { MyTopBar { scope.launch { scaffoldState.drawerState.open() } } },
             drawerBackgroundColor = MaterialTheme.colors.background,
             drawerContent = { Drawer(MenuItem.values().toList(), navigationManager) }
         ) {

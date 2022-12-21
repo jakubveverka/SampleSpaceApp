@@ -14,8 +14,12 @@ import com.jakubveverka.samplespaceapp.menu.MenuItem
 import com.jakubveverka.spacenavigation.NavigationManager
 
 @Composable
-fun Drawer(menuItems: List<MenuItem>, navigationManager: NavigationManager) {
-    LazyColumn {
+fun Drawer(
+    menuItems: List<MenuItem>,
+    navigationManager: NavigationManager,
+    modifier: Modifier = Modifier
+) {
+    LazyColumn(modifier = modifier) {
         items(menuItems.size) { index ->
             DrawerRow(menuItems[index], index == (menuItems.size - 1), navigationManager)
         }
@@ -24,9 +28,14 @@ fun Drawer(menuItems: List<MenuItem>, navigationManager: NavigationManager) {
 
 
 @Composable
-private fun DrawerRow(menuItem: MenuItem, isLast: Boolean, navigationManager: NavigationManager) {
+private fun DrawerRow(
+    menuItem: MenuItem,
+    isLast: Boolean,
+    navigationManager: NavigationManager,
+    modifier: Modifier = Modifier
+) {
     Row(
-        Modifier
+        modifier
             .fillMaxWidth()
             .clickable { navigationManager.navigate(menuItem.screen) }
             .padding(10.dp)

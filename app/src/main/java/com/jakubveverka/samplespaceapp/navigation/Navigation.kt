@@ -2,6 +2,7 @@ package com.jakubveverka.samplespaceapp.navigation
 
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -18,9 +19,11 @@ fun Navigation(
     navController: NavHostController,
     navigationManager: com.jakubveverka.spacenavigation.NavigationManager,
     launchListViewModel: LaunchListViewModel,
-    launchDetailViewModel: LaunchDetailViewModel
+    launchDetailViewModel: LaunchDetailViewModel,
+    modifier: Modifier = Modifier
 ) {
     NavHost(
+        modifier = modifier,
         navController = navController,
         startDestination = Screen.LaunchList.route
     ) {
@@ -35,7 +38,7 @@ fun Navigation(
         }
         composable(
             route = Screen.LaunchDetail.route,
-            arguments = getNavArgumentsForScreen(Screen.LaunchDetail)
+            arguments = Screen.LaunchDetail.getNavArguments()
         ) { backStackEntry ->
             LaunchDetail(
                 launchDetailViewModel,
@@ -46,8 +49,8 @@ fun Navigation(
     }
 }
 
-private fun getNavArgumentsForScreen(screen: Screen) =
-    screen.parameters.map { param ->
+private fun Screen.getNavArguments() =
+    parameters.map { param ->
         navArgument(param.paramName) {
             type = when (param.type) {
                 String::class.java -> NavType.StringType
