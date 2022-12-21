@@ -11,59 +11,49 @@ import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.jakubveverka.spacedata.api.ApiResult
-import com.jakubveverka.spacedata.domain.model.Launch
-import com.jakubveverka.spacelaunch.list.viewModel.LaunchListViewModel
 import com.jakubveverka.spacelaunch.ui.LaunchDetails
 import com.jakubveverka.spacelaunch.ui.LaunchFail
 import com.jakubveverka.spacelaunch.ui.LaunchSuccess
 import com.jakubveverka.spacelaunch.ui.WhiteText
+import com.jakubveverka.spacelaunch.uimodel.LaunchUi
 import com.jakubveverka.spacenavigation.NavigationManager
 import com.jakubveverka.spacenavigation.Screen
-import java.text.SimpleDateFormat
 
 @Composable
-fun LaunchList(launchListViewModel: LaunchListViewModel, navigationManager: NavigationManager) {
-    val shouldOpenDialog = rememberSaveable { mutableStateOf(true) }
-    val filterName = rememberSaveable { mutableStateOf("") }
+fun LaunchList(
+    launchListResult: ApiResult<List<LaunchUi>>,
+    navigationManager: NavigationManager,
+    filterName: String,
+    shouldOpenDialog: Boolean,
+    filterValueChanged: (String) -> Unit,
+    onDismiss: () -> Unit
+) {
     Column(modifier = Modifier.fillMaxSize()) {
-        FilterTextField(filterName)
-        launchListViewModel.launches.collectAsState().also {
-            val filteredData = it.value.data.filterByName(filterName.value)
-            when (it.value) {
-                is ApiResult.Error -> {
-                    LaunchListColumn(filteredData, navigationManager)
-                    HandleDialog(shouldOpenDialog, it.value.message)
-                }
-                is ApiResult.Loading -> {
-                    Box(
-                        modifier = Modifier.fillMaxSize(),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        LaunchListColumn(filteredData, navigationManager)
-                        Loading()
-                    }
-                }
-                is ApiResult.Success -> {
-                    LaunchListColumn(filteredData, navigationManager)
+        FilterTextField(filterName, filterValueChanged)
+        when (launchListResult) {
+            is ApiResult.Error -> {
+                LaunchListColumn(launchListResult.data, navigationManager)
+                HandleDialog(shouldOpenDialog, launchListResult.message, onDismiss)
+            }
+            is ApiResult.Loading -> {
+                Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    LaunchListColumn(launchListResult.data, navigationManager)
+                    Loading()
                 }
             }
+            is ApiResult.Success -> {
+                LaunchListColumn(launchListResult.data, navigationManager)
+            }
         }
-    }
-}
-
-private fun List<Launch>.filterByName(filterName: String): List<Launch> {
-    return filter { launch ->
-        launch.name.contains(filterName, ignoreCase = true)
     }
 }
 
@@ -80,10 +70,14 @@ private fun Loading(modifier: Modifier = Modifier) {
 }
 
 @Composable
-private fun FilterTextField(filterName: MutableState<String>, modifier: Modifier = Modifier) {
+private fun FilterTextField(
+    filterName: String,
+    onValueChanged: (String) -> Unit,
+    modifier: Modifier = Modifier
+) {
     OutlinedTextField(
-        value = filterName.value,
-        onValueChange = { filterName.value = it },
+        value = filterName,
+        onValueChange = { onValueChanged(it) },
         placeholder = { Text(text = "Filter launches by name...") },
         modifier = modifier
             .fillMaxWidth()
@@ -93,13 +87,14 @@ private fun FilterTextField(filterName: MutableState<String>, modifier: Modifier
 
 @Composable
 private fun HandleDialog(
-    shouldOpenDialog: MutableState<Boolean>,
+    shouldOpenDialog: Boolean,
     dialogTitle: String?,
+    onDismiss: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    if (shouldOpenDialog.value) {
+    if (shouldOpenDialog) {
         AlertDialog(
-            onDismissRequest = { shouldOpenDialog.value = false },
+            onDismissRequest = { onDismiss() },
             title = { Text(text = "Error = $dialogTitle") },
             buttons = { },
             modifier = modifier
@@ -109,7 +104,7 @@ private fun HandleDialog(
 
 @Composable
 private fun LaunchListColumn(
-    data: List<Launch>,
+    data: List<LaunchUi>,
     navigationManager: NavigationManager,
     modifier: Modifier = Modifier
 ) {
@@ -141,9 +136,7 @@ private fun LaunchListColumn(
                         WhiteText(text = launch.name)
                     }
                     Column(modifier = columnModifier) {
-                        val dateText = launch.date?.let {
-                            SimpleDateFormat.getDateTimeInstance().format(it * 1000)
-                        } ?: "No date available"
+                        val dateText = launch.date ?: "No date available"
                         WhiteText(text = "Date $dateText")
                     }
                     Column(modifier = columnModifier) {

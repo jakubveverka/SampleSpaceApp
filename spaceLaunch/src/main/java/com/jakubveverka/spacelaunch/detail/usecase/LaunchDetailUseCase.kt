@@ -1,9 +1,9 @@
 package com.jakubveverka.spacelaunch.detail.usecase
 
-import com.jakubveverka.spacedata.domain.model.Launch
+import com.jakubveverka.spacelaunch.uimodel.LaunchUi
 import kotlinx.coroutines.flow.Flow
 
 interface LaunchDetailUseCase {
 
-    fun getLaunch(id: String): Flow<Launch>
+    fun getLaunch(id: String): Flow<LaunchUi>
 }

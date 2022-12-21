@@ -13,9 +13,8 @@ App is divided to several modules.
 * spaceNavigation - Plain Kotlin module that contains components used for navigation in the app. NavigationManager is used throughout the app for handling navigation event, so the NavigationController does not have to passed all around the app.
 
 ##TODO
-* separate logic to UseCases
-* separate DTO and domain/ui models (right now just one model for simplicity)
-* modifier parameter to composable functions to support reusability (again for simplicity modifier parameter omitted for now)
+* build.gradle files to kts
+* dependencies and versions refactoring
 * Another screens
 * writing data over the network
 * unit and integration tests

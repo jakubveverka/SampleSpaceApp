@@ -1,5 +1,8 @@
 package com.jakubveverka.spacedata.api
 
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.transform
+
 sealed class ApiResult<out  T> {
     abstract val data: T
     abstract val message: String?
@@ -18,3 +21,14 @@ sealed class ApiResult<out  T> {
         override val message: String? = null
     }
 }
+
+inline fun <T, R: Any> Flow<ApiResult<List<T>>>.transformList(crossinline transform: suspend (value: List<T>) -> List<R>): Flow<ApiResult<List<R>>> =
+    this.transform { value ->
+        val transformedValue = transform(value.data)
+        val newResult = when (value) {
+            is ApiResult.Error -> ApiResult.Error(value.message, transformedValue)
+            is ApiResult.Loading -> ApiResult.Loading(transformedValue)
+            is ApiResult.Success -> ApiResult.Success(transformedValue)
+        }
+        return@transform emit(newResult)
+    }
